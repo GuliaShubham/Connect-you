@@ -27,6 +27,7 @@ myPeer.on('call', call => {
 })
 
 socket.on('user-connected',userId =>{
+    console.log("user Connected :"+ userId);
     connectToNewUser(userId,stream);
 })
 
