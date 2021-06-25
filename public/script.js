@@ -47,25 +47,6 @@ socket.on('user-disconnected', userId => {
   })
 //functions to getting the stream from media devices and putting into our video object on  the screen
 
-// function addVideoStream(video, stream){
-//     video.srcObject = stream
-//     video.addEventListener('loadedmetadata', () =>{
-//         video.play();
-//     })
-//     videoGrid.append(video)
-// }
-
-// function connectToNewUser(userId,stream){
-//      const call = myPeer.call(userId, stream);
-//      const video = document.createElement('video');
-//      call.on('stream', userVideoStream => {
-//          addVideoStream(video,userVideoStream);
-//      })
-//      call.on('close', () => {
-//          video.remove();
-//      })
-// }
-
 function connectToNewUser(userId, stream) {
     const call = myPeer.call(userId, stream)
     const video = document.createElement('video')
