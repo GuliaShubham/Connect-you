@@ -9,7 +9,7 @@ app.use(express.static('public'));
 
 const PORT = process.env.PORT || 5000;
 
-app.get('/Connect',(req,res) =>{
+app.get('/',(req,res) =>{
     res.render("index.ejs");
 })
 
