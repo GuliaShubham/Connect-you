@@ -3,24 +3,27 @@ console.log("executing");
 const videoGrid = document.getElementById('video-grid');
 
 const socket = io(`/`) 
-const myPeer = new Peer(undefined,{
-    host:'/',
-    port: '5001'
-})
-//video rendering code
 
-const myVideo = document.createElement('video');
+let username = prompt("enter your name: ")
+
+const myPeer = new Peer(undefined);
+//video rendering code
+let myVideoStream;
+let myVideo = document.createElement('video');
 myVideo.muted = true;
-const peers ={}
+//let peers ={}
+
 navigator.mediaDevices.getUserMedia({
     video:true,
     audio:true
 }).then(stream => {
+    myVideoStream = stream;
 addVideoStream(myVideo, stream);
 
 myPeer.on('call', call => {
     call.answer(stream)
     const video = document.createElement('video')
+    myVideo.id= "my_video"
     call.on('stream', userVideoStream => {
         addVideoStream(video, userVideoStream)
     })
@@ -39,17 +42,18 @@ myPeer.on('open', id => {
     socket.emit('join-room', ROOM_ID, id);
 })
 
-socket.on('user-connected', userId => {
-    console.log('User connected :'+ userId)
-})
-socket.on('user-disconnected', userId => {
-    if (peers[userId]) peers[userId].close()
-  })
+// socket.on('user-connected', userId => {
+//     console.log('User connected :'+ userId)
+// })
+// socket.on('user-disconnected', userId => {
+//     if (peers[userId]) peers[userId].close()
+//   })
 //functions to getting the stream from media devices and putting into our video object on  the screen
 
 function connectToNewUser(userId, stream) {
-    const call = myPeer.call(userId, stream)
-    const video = document.createElement('video')
+    let call = myPeer.call(userId, stream)
+    let video = document.createElement('video')
+    myVideo.id = "my_video";
     call.on('stream', userVideoStream => {
       addVideoStream(video, userVideoStream)
     })
@@ -57,7 +61,7 @@ function connectToNewUser(userId, stream) {
       video.remove()
     })
   
-    peers[userId] = call
+   // peers[userId] = call
   }
   
   function addVideoStream(video, stream) {
