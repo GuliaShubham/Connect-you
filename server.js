@@ -36,6 +36,13 @@ io.on('connection', socket =>{
        // console.log( roomId,userId)
         socket.join(roomId);
         socket.to(roomId).emit('user-connected', userId);
+        
+         socket.on('message', (message, username) => {
+          let userObject = { userId : userId , username : username};
+            userList.push(userObject);
+            console.log(userList);
+          io.to(roomId).emit('createMessage', message, username);
+        })
    
         socket.on('disconnect', () => {
           socket.to(roomId).emit('user-disconnected', userId)
