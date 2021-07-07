@@ -1,11 +1,11 @@
 let username = prompt("enter your name: ")
 const socket = io('/')
 const videoGrid = document.getElementById('video-grid')
-const myPeer = new Peer(undefined , {
-   path: '/peerjs',
-   host: '/',
-   port: '443'
- }
+ const myPeer = new Peer(undefined// , {
+//    path: '/peerjs',
+//    host: '/',
+//    port: '443'
+//  }
 )
 let myVideoStream;
 const myVideo = document.createElement('video')
