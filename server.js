@@ -19,7 +19,7 @@ const {v4 : uuidV4 } =require('uuid');
 app.set('view engine','ejs');
 app.use(express.static('public'));
 
-app.get('/Connect',(req,res) =>{
+app.get('/',(req,res) =>{
     res.render("index.ejs");
 })
 
