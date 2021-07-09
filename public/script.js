@@ -1,18 +1,17 @@
 let username = prompt("enter your name: ")
+
 const socket = io('/')
 const videoGrid = document.getElementById('video-grid')
-const myPeer = new Peer(undefined // , {
+const myPeer = new Peer(undefined //, {
 //   path: '/peerjs',
 //   host: '/',
 //   port: '443'
-// }
+//}
 )
 let myVideoStream;
 const myVideo = document.createElement('video')
-myVideo.id = "my_video";
-
 myVideo.muted = true;
-let peers = {}
+const peers = {}
 navigator.mediaDevices.getUserMedia({
   video: true,
   audio: true
@@ -22,7 +21,6 @@ navigator.mediaDevices.getUserMedia({
   myPeer.on('call', call => {
     call.answer(stream)
     const video = document.createElement('video')
-    myVideo.id = "my_video";
     call.on('stream', userVideoStream => {
       addVideoStream(video, userVideoStream)
     })
@@ -36,7 +34,7 @@ navigator.mediaDevices.getUserMedia({
   // when press enter send message
   $('html').keydown(function (e) {
     if (e.which == 13 && text.val().length !== 0) {
-      socket.emit('message', text.val(),username);
+      socket.emit('message', text.val());
       text.val('')
     }
   });
@@ -47,7 +45,7 @@ navigator.mediaDevices.getUserMedia({
 })
 
 socket.on('user-disconnected', userId => {
-  if (peers[userId]) peers[userId].close();
+  if (peers[userId]) peers[userId].close()
 })
 
 myPeer.on('open', id => {
@@ -57,7 +55,6 @@ myPeer.on('open', id => {
 function connectToNewUser(userId, stream) {
   const call = myPeer.call(userId, stream)
   const video = document.createElement('video')
-  myVideo.id = "my_video";
   call.on('stream', userVideoStream => {
     addVideoStream(video, userVideoStream)
   })
@@ -96,7 +93,7 @@ const muteUnmute = () => {
 }
 
 const playStop = () => {
- // console.log('object')
+  console.log('object')
   let enabled = myVideoStream.getVideoTracks()[0].enabled;
   if (enabled) {
     myVideoStream.getVideoTracks()[0].enabled = false;
@@ -138,6 +135,7 @@ const setPlayVideo = () => {
   `
   document.querySelector('.main__video_button').innerHTML = html;
 }
+
 
 document.getElementById('leave_meeting').onclick = function (){
   console.log("left meering");
