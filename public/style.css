@@ -121,7 +121,7 @@ video {
     color:white;
 }
 
-.main__controls__button .leave_meeting:hover {
+.main__controls__button #leave_meeting:hover {
    /* background-color: red; */
     color:red;
 }
