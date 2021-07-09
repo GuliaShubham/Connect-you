@@ -1,26 +1,25 @@
-let username = prompt("enter your name: ")
-
 const socket = io('/')
 const videoGrid = document.getElementById('video-grid')
-const myPeer = new Peer(undefined //, {
-//   path: '/peerjs',
-//   host: '/',
-//   port: '443'
-//}
-)
+
+
+let username = prompt("Enter Your Name ");
+const peer = new Peer(undefined);
+
 let myVideoStream;
 const myVideo = document.createElement('video')
+myVideo.id = "my_video";
 myVideo.muted = true;
-const peers = {}
+// const peers = {}
 navigator.mediaDevices.getUserMedia({
   video: true,
   audio: true
 }).then(stream => {
   myVideoStream = stream;
   addVideoStream(myVideo, stream)
-  myPeer.on('call', call => {
+  peer.on('call', call => {
     call.answer(stream)
     const video = document.createElement('video')
+    myVideo.id = "my_video";
     call.on('stream', userVideoStream => {
       addVideoStream(video, userVideoStream)
     })
@@ -29,40 +28,34 @@ navigator.mediaDevices.getUserMedia({
   socket.on('user-connected', userId => {
     connectToNewUser(userId, stream)
   })
-  // input value
+
   let text = $("input");
   // when press enter send message
   $('html').keydown(function (e) {
     if (e.which == 13 && text.val().length !== 0) {
-      socket.emit('message', text.val());
+      socket.emit('message', text.val(), username);
       text.val('')
     }
   });
-  socket.on("createMessage", (message,username) => {
-    $("ul").append(`<li class="message"><b>${username}</b><br/>${message}</li>`);
+  socket.on("createMessage", (message, username) => {
+    $("ul").append(`<li class="message"><b></b><br/>${username}: ${message}</li>`);
     scrollToBottom()
   })
+
 })
 
-socket.on('user-disconnected', userId => {
-  if (peers[userId]) peers[userId].close()
-})
 
-myPeer.on('open', id => {
+peer.on('open', id => {
   socket.emit('join-room', ROOM_ID, id)
 })
 
 function connectToNewUser(userId, stream) {
-  const call = myPeer.call(userId, stream)
+  const call = peer.call(userId, stream)
   const video = document.createElement('video')
+  myVideo.id = "my_video";
   call.on('stream', userVideoStream => {
     addVideoStream(video, userVideoStream)
   })
-  call.on('close', () => {
-    video.remove()
-  })
-
-  peers[userId] = call
 }
 
 function addVideoStream(video, stream) {
@@ -73,13 +66,10 @@ function addVideoStream(video, stream) {
   videoGrid.append(video)
 }
 
-
-
 const scrollToBottom = () => {
   var d = $('.main__chat_window');
   d.scrollTop(d.prop("scrollHeight"));
 }
-
 
 const muteUnmute = () => {
   const enabled = myVideoStream.getAudioTracks()[0].enabled;
@@ -135,7 +125,6 @@ const setPlayVideo = () => {
   `
   document.querySelector('.main__video_button').innerHTML = html;
 }
-
 
 document.getElementById('leave_meeting').onclick = function (){
   console.log("left meering");
