@@ -58,9 +58,9 @@ function connectToNewUser(userId, stream) {
   })
 }
 
-function addVideoStream(video, stream) {
+async function addVideoStream(video, stream) {
   video.srcObject = stream
-  video.addEventListener('loadedmetadata', () => {
+ await video.addEventListener('loadedmetadata', () => {
     video.play()
   })
   videoGrid.append(video)
@@ -127,6 +127,6 @@ const setPlayVideo = () => {
 }
 
 document.getElementById('leave_meeting').onclick = function (){
-  console.log("left meering");
+  console.log("left meeting");
   location.href = "/connect";
 }
