@@ -1,11 +1,11 @@
 let username = prompt("enter your name: ")
 const socket = io('/')
 const videoGrid = document.getElementById('video-grid')
- const myPeer = new Peer(undefined// , {
-//    path: '/peerjs',
-//    host: '/',
-//    port: '443'
-//  }
+const myPeer = new Peer(undefined // , {
+//   path: '/peerjs',
+//   host: '/',
+//   port: '443'
+// }
 )
 let myVideoStream;
 const myVideo = document.createElement('video')
@@ -44,7 +44,7 @@ navigator.mediaDevices.getUserMedia({
 })
 
 socket.on('user-disconnected', userId => {
-  if (peers[userId]) peers[userId].close()
+  if (peers[userId]) peers[userId].close();
 })
 
 myPeer.on('open', id => {
@@ -133,4 +133,9 @@ const setPlayVideo = () => {
     <span>Play Video</span>
   `
   document.querySelector('.main__video_button').innerHTML = html;
+}
+
+document.getElementById('leave_meeting').onclick = function (){
+  console.log("left meering");
+  location.href = "/connect";
 }
