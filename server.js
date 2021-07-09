@@ -1,27 +1,34 @@
 const express = require('express');
 const app = express();
-const server = require('http').Server(app);
-const io = require("socket.io")(server);
-const {v4 : uuidV4 } =require('uuid');
 
+const server = require('http').createServer(app);
+const io = require("socket.io")(server);
 // const { ExpressPeerServer } = require('peer');
 // const peerServer = ExpressPeerServer(server, {
 //   debug: true
 // });
 
+const PORT = process.env.PORT || 5000;
+server.listen(PORT, () => console.log(`Listening to ${PORT}`));
+
+let userList= [];
+
+const {v4 : uuidV4 } =require('uuid');
+
+//app.use('/peerjs', peerServer);
 app.set('view engine','ejs');
 app.use(express.static('public'));
-//app.use('/peerjs', peerServer);
 
-const PORT = process.env.PORT || 5000;
-
-app.get('/',(req,res) =>{
+app.get('/Connect',(req,res) =>{
     res.render("index.ejs");
 })
 
 app.get('/room',  (req,res) =>{
       console.log('making room');
-     res.redirect(`/room/${uuidV4()}`);
+      let id = uuidV4();
+      console.log(id);
+     res.redirect(`/room/${id}`);
+    // res.render('room',{roomId: id }); 
   })
   
   app.get('/room/:id', (req,res)=>{
@@ -36,21 +43,18 @@ io.on('connection', socket =>{
        // console.log( roomId,userId)
         socket.join(roomId);
         socket.to(roomId).emit('user-connected', userId);
-        
-         socket.on('message', (message, username) => {
+   
+
+        socket.on('message', (message, username) => {
           let userObject = { userId : userId , username : username};
             userList.push(userObject);
             console.log(userList);
           io.to(roomId).emit('createMessage', message, username);
         })
-   
+
         socket.on('disconnect', () => {
           socket.to(roomId).emit('user-disconnected', userId)
         })
+
       })
 })
-
-server.listen(PORT, () => console.log(`Listening to ${PORT}`));
-
-
-
